@@ -1,0 +1,18 @@
+Firefoxen is simple utility for configuring multiple versions of Firefox on Mac OS X so that you can use them at once.
+
+Usage: Edit firefoxen.rb according to the information in the header. At a minimum you need to specify the names of the Firefox versions that you intend to use and the name of the profile that you intend to use it with. It is assumed that your Firefox versions are in /Application folder, but you can override that location by specifying a path.
+
+Then from the command line
+
+$ ./firefoxen.rb
+
+To reverse the changes and return to a default installation (all version of Firefox use the same profile):
+
+$ ./firefoxen.rb -r
+
+Source: http://github.com/yesteray/firefoxen/tree/master
+
+License: Ruby's (http://www.ruby-lang.org/en/LICENSE.txt)
+
+
+Copyright: Ray Baxter (ray.baxter@gmail.com) 2008

@@ -18,6 +18,8 @@ VERSIONS = [
   { :name => "Minefield",    :profile => "minefield" },
 ]
 
+# You don't need to change anything below this line.
+
 DEFAULTS =  { :path => "/Applications", 
               :name => "Firefox" , 
               :executable_name => "firefox-bin",
@@ -47,7 +49,7 @@ def add_executable(executable, bundle_path, profile="default")
 end
 
 def ls_register
-  @first ||= false
+  @first = @first.nil? ? true : false
   command = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister "
   command += @first ? "{command -kill }" : ""
   command
