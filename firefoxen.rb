@@ -2,13 +2,13 @@
 
 # These are your multiple installations of Firefox, each with a different profile.
 # Add an entry to this hash corresponding to each of the versions of Firefox that 
-# you plan to use simultaneously. The profiles must
+# you plan to use simultaneously. In order to use two versions of Firefox simultaneously,
+# they must have separate profiles. 
+#
 # For reference, here is the default Firefox:
 #
 # VERSIONS = [
-#     :path => "/Applications",
-#     :name => "Firefox",
-#     :profile => "default"   
+#  { :path => "/Applications", :name => "Firefox", :profile => "default" }
 # ]
 
 VERSIONS = [

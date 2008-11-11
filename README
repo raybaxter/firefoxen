@@ -1,6 +1,9 @@
-Firefoxen is simple utility for configuring multiple versions of Firefox on Mac OS X so that you can use them at once.
+Firefoxen is simple utility for configuring multiple versions of Firefox on Mac OS X so that you can use them at once. The different versions must launch different profiles if they are to be used simultaneously. 
 
-Usage: Edit firefoxen.rb according to the information in the header. At a minimum you need to specify the names of the Firefox versions that you intend to use and the name of the profile that you intend to use it with. It is assumed that your Firefox versions are in /Application folder, but you can override that location by specifying a path.
+Usage
+-----
+
+Edit firefoxen.rb according to the information in the header. At a minimum you need to specify the names of the Firefox versions that you intend to use and the name of the profile that you intend to use it with. It is assumed that your Firefox versions are in /Application folder, but you can override that location by specifying a path.
 
 Then from the command line
 
@@ -10,9 +13,28 @@ To reverse the changes and return to a default installation (all version of Fire
 
 $ ./firefoxen.rb -r
 
-Source: http://github.com/yesteray/firefoxen/tree/master
+Creating Firefox Profiles
+-------------------------
 
-License: Ruby's (http://www.ruby-lang.org/en/LICENSE.txt)
+See http://kb.mozillazine.org/Command_line_arguments
 
+You can create a Firefox profile from the command line:
+$ /Applications/Firefox.app/Contents/MacOS/firefox-bin -CreateProfile new-profile
 
-Copyright: Ray Baxter (ray.baxter@gmail.com) 2008
+or interactively:
+$ /Applications/Firefox.app/Contents/MacOS/firefox-bin -ProfileManager
+
+Source
+------
+
+Git the source here: http://github.com/yesteray/firefoxen/tree/master
+
+License
+------- 
+
+Ruby's (http://www.ruby-lang.org/en/LICENSE.txt)
+
+Copyright
+---------
+
+Ray Baxter (ray.baxter@gmail.com) 2008
