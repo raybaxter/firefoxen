@@ -10,6 +10,18 @@
 # VERSIONS = [
 #  { :path => "/Applications", :name => "Firefox", :profile => "default" }
 # ]
+#
+# Thanks to Jonathan Barnes and Joe Moore, you can also call Firefoxen from the command 
+# line, passing in a name and a profile to configure one version of Firefox at a time. 
+# See below.
+#
+
+VERSIONS = [
+  { :name => "Firefox2",      :profile => "firefox-2"  },
+  { :name => "Firefox3",                               },
+  { :name => "Firefox3.1b1",  :profile => "firefox-3b" },
+  { :name => "Minefield",     :profile => "minefield"  },
+]
 
 # You don't need to change anything below this line.
 
@@ -70,18 +82,28 @@ def install_or_remove(versions)
   (results.size > 0) ? results : 0
 end
 
-def set_local_defaults()
-  @installing = true
-end
-
 if $0 == __FILE__
 
-  if ARGV.length != 2
-    puts("Usage: #{__FILE__} AppName ProfileName")
+  @installing = true
+
+  case ARGV.length
+  when 0
+    versions = VERSIONS  
+  when 1 && ARGV[0] == '-r'
+    @installing = false
+  when 2
+    versions = [{:name => ARGV[0], :profile => ARGV[1]}]
+  else
+    puts <<-end
+      Usage: #{__FILE__} - modify all versions of Firefox
+         or: #{__FILE__} AppName ProfileName - modfiy a single Firefox instance
+         or: #{__FILE__} -r - revert all versions of Firefox to default
+
+      end
     exit(0)
   end
-  set_local_defaults()
-  install_or_remove([{:name => ARGV[0], :profile => ARGV[1]}])
+  
+  install_or_remove(versions)
   
 end
 
