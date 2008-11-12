@@ -32,7 +32,7 @@ Git the source here: http://github.com/yesteray/firefoxen/tree/master
 License
 ------- 
 
-We Added some .icns files that you may find useful to tell your apps apart when you have multiple Firefox's running.  The fastest way to change the icon of your app is to "get info" (Cmd-i) on both your app and this custom .icns file, then copy the tiny icon from top left of the .icns info pane and paste it into the tiny icon from top left of the the apps info pane.
+We Added some .icns files that you may find useful to tell your apps apart when you have multiple Firefox's running.  The fastest way to change the icon of your app is to "get info" (Cmd-i) on both your app and this custom .icns file, then copy the tiny icon from top left of the .icns info pane and paste it into the tiny icon from top left of the the apps info pane. [I must be missing some component. This doesn't work for me. - Ray]
 
 Source: http://github.com/yesteray/firefoxen/tree/master
 
