@@ -16,94 +16,128 @@
 # See below.
 #
 
-VERSIONS = [
-  { :name => "Firefox2",      :profile => "firefox-2"  },
-  { :name => "Firefox3",                               },
-  { :name => "Firefox3.1b1",  :profile => "firefox-3b" },
-  { :name => "Minefield",     :profile => "minefield"  },
-]
-
-# You don't need to change anything below this line.
-
-DEFAULTS =  { :path => "/Applications", 
-              :name => "Firefox" , 
-              :executable_name => "firefox-bin",
-              :profile => "default"
-}
-
-INSTALL_DEFAULTS = {
-  :executable_name => "launch-ff"
-}
-
-def set_defaults(bundle_path, executable)
-  plist = "#{bundle_path}/Contents/Info"
-  system "defaults write #{plist} CFBundleExecutable '" + "#{executable}" +"'"
-end
-
-def installing?
-  @installing = @installing.nil? ? true : @installing
-end
-
-def add_executable(executable, bundle_path, profile="default")
-  local_path = "#{bundle_path}/Contents/MacOS"
-  path_to_executable = "#{local_path}/#{executable}"
+class Firefoxen
   
-  contents = "#!/bin/sh\n#{local_path}/firefox-bin -P #{profile}"
-  File.open(path_to_executable, "w").puts(contents)
-  File.chmod(0755, path_to_executable)
-end
+  DEFAULTS =  { :path => "/Applications", 
+                :name => "Firefox" , 
+                :profile => "default"
+  }
 
-def ls_register
-  @first = @first.nil? ? true : false
-  command = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister "
-  command += @first ? "{command -kill }" : ""
-  command
-end
-
-def register_command(bundle)
-  `#{ls_register} -f #{bundle} -apps -u`
-end
-
-def install_or_remove(versions)
-  results = []
-  versions.each do |values|
-    version = DEFAULTS.merge(values)
-    version = version.merge(INSTALL_DEFAULTS) if installing?
-    
-    bundle_path = "#{version[:path]}/#{version[:name]}.app"
-    executable_name = version[:executable_name]
-
-    add_executable(executable_name, bundle_path, version[:profile]) if installing?
-    set_defaults(bundle_path, executable_name) 
-
-    result = register_command(bundle_path)
-    results <<  result if results.size > 0
+  def self.install(versions)
+    self.new(versions).run
   end
-  (results.size > 0) ? results : 0
+  
+  def self.remove(versions)
+    self.new(versions,false).run
+  end
+
+  attr_accessor :installing
+    
+  def initialize(versions, installing=true)
+    @installing = installing
+    @versions = versions
+  end
+  
+  def set_defaults(bundle_path, executable="firefox-bin")
+    plist = "#{bundle_path}/Contents/Info"
+    system "defaults write #{plist} CFBundleExecutable '" + "#{executable}" +"'"
+  end
+
+  def installing?
+    @installing 
+  end
+
+  def add_executable(bundle_path, profile="default")
+    local_path = "#{bundle_path}/Contents/MacOS"
+    path_to_executable = "#{local_path}/launch-ff"
+  
+    contents = "#!/bin/sh\n#{local_path}/firefox-bin -P #{profile}"
+    File.open(path_to_executable, "w") do |f| 
+      f.puts(contents) 
+      f.chmod(0755)
+    end
+  end
+  
+  def remove_executable(bundle_path)
+    local_path = "#{bundle_path}/Contents/MacOS"
+    path_to_executable = "#{local_path}/launch-ff"
+    `rm -f #{path_to_executable}`
+  end
+
+  def ls_register
+    # @first = @first.nil? ? true : false
+    command = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister "
+    # command += @first ? "{command -kill }" : ""
+    command
+  end
+
+  def register_command(bundle)
+    `#{ls_register} -f #{bundle} -apps -u`
+  end
+
+  def run()
+    results = []
+    @versions.each do |values|
+      version = DEFAULTS.merge(values)
+    
+      bundle_path = "#{version[:path]}/#{version[:name]}.app"
+      executable_name = version[:executable_name]
+
+      if installing?
+        add_executable(bundle_path, version[:profile])
+        set_defaults(bundle_path,"launch-ff") 
+      else
+        remove_executable(bundle_path)        
+        set_defaults(bundle_path) 
+      end
+
+      result = register_command(bundle_path)
+      results <<  result if results.size > 0
+    end
+    (results.size > 0) ? results : 0
+  end
+end
+
+def usage
+  puts <<-end
+    Usage: #{__FILE__} - modify all versions of Firefox
+       or: #{__FILE__} AppName ProfileName - modfiy a single Firefox instance
+       or: #{__FILE__} -r - revert all versions of Firefox to default
+
+    end
+  exit(0)
 end
 
 if $0 == __FILE__
 
-  @installing = true
+  VERSIONS = [
+     { :name => "Firefox2",      :profile => "firefox-2"  },
+     { :name => "Firefox3",                               },
+     { :name => "Firefox3.1b1",  :profile => "firefox-3b" },
+     { :name => "Minefield",     :profile => "minefield"  },
+   ]
+  
+  installing = true
+  versions = VERSIONS  
 
   case ARGV.length
   when 0
-    versions = VERSIONS  
-  when 1 && ARGV[0] == '-r'
-    @installing = false
+  when 1 
+    if ARGV[0].chomp == "-r"
+      installing = false
+    else
+      usage
+    end
   when 2
     versions = [{:name => ARGV[0], :profile => ARGV[1]}]
   else
-    puts <<-end
-      Usage: #{__FILE__} - modify all versions of Firefox
-         or: #{__FILE__} AppName ProfileName - modfiy a single Firefox instance
-         or: #{__FILE__} -r - revert all versions of Firefox to default
-
-      end
-    exit(0)
+    usage
   end
   
-  install_or_remove(versions)
-  
+  if installing
+    Firefoxen.install(versions)
+  else
+    Firefoxen.remove(versions)
+  end
 end
 
