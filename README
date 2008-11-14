@@ -3,26 +3,36 @@ Firefoxen is simple utility for configuring multiple versions of Firefox on Mac 
 Usage
 -----
 
-Edit firefoxen.rb according to the information in the header. At a minimum you need to specify the names of the Firefox versions that you intend to use and the name of the profile that you intend to use it with. It is assumed that your Firefox versions are in /Application folder, but you can override that location by specifying a path.
+From the command line, run firefoxen.rb appName profileName to modify a single instance of Firefox to run with a different profile.
 
-Then from the command line
+Example: 
 
-$ ./firefoxen.rb
+$ ./firefoxen.rb Firefox3 ff3-profile
 
-To reverse the changes and return to a default installation (all version of Firefox use the same profile):
+Otherwise, you can run firefoxen without any arguments to update all you locally configured versions of Firefox. Just modify the VERSIONS array in the file to modify your current selected set of Firefoxen. This has the advantage that you can run it on a number of versions repetitively (if you update from version 3.0 to 3.1 for instance. You currently must use this if you would like to further customize your installs with the path to Firefox, or a special name for the firefox-bin executable. The other advantage is that you can then also run:
 
-$ ./firefoxen.rb -r
+$ ./firefoxen.rb -r 
+
+to revert to the default Firefox behavior.
 
 Creating Firefox Profiles
 -------------------------
 
+If the profileName that you specified above does not already exist, you will be presented with the Profilie Manager when you next open that instance of Firefox.  Create the profile you specified above.  You will not be presented with the Profile Manager again if done correctly.
+
 See http://kb.mozillazine.org/Command_line_arguments
 
-You can create a Firefox profile from the command line:
+You can also create a Firefox profile from the command line:
 $ /Applications/Firefox.app/Contents/MacOS/firefox-bin -CreateProfile new-profile
 
 or interactively:
 $ /Applications/Firefox.app/Contents/MacOS/firefox-bin -ProfileManager
+
+Icons
+-----
+
+There are some zip files containing .icns files. You can replace the apps .icns files with the ones provided if you would like to have custom icons. 
+Right click on your /Applications/[appName].app and choose 'Show Package Contents' you can then replace the file under Contents/Resources/firefox.icns with one of the ones in the provided zip. Make sure to rename it properly.
 
 Source
 ------
@@ -32,16 +42,14 @@ Git the source here: http://github.com/yesteray/firefoxen/tree/master
 License
 ------- 
 
-We Added some .icns files that you may find useful to tell your apps apart when you have multiple Firefox's running.  The fastest way to change the icon of your app is to "get info" (Cmd-i) on both your app and this custom .icns file, then copy the tiny icon from top left of the .icns info pane and paste it into the tiny icon from top left of the the apps info pane. [I must be missing some component. This doesn't work for me. - Ray]
-
-Source: http://github.com/yesteray/firefoxen/tree/master
-
 Ruby's (http://www.ruby-lang.org/en/LICENSE.txt)
+
 
 Copyright
 ---------
 
 Ray Baxter (ray.baxter@gmail.com) 2008
-=======
-Copyright: Ray Baxter (ray.baxter@gmail.com) 2008
+
+Joe and Jonathan added the method of calling by passing in the appName and profileName, and created the custom icons.
+
 
